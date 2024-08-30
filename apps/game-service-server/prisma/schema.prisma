@@ -1,0 +1,37 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Player {
+  characters Character[]
+  createdAt  DateTime    @default(now())
+  email      String?
+  id         String      @id @default(cuid())
+  updatedAt  DateTime    @updatedAt
+  username   String?
+}
+
+model Character {
+  createdAt DateTime   @default(now())
+  id        String     @id @default(cuid())
+  name      String?
+  player    Player?    @relation(fields: [playerId], references: [id])
+  playerId  String?
+  positions Position[]
+  updatedAt DateTime   @updatedAt
+}
+
+model Position {
+  character   Character? @relation(fields: [characterId], references: [id])
+  characterId String?
+  createdAt   DateTime   @default(now())
+  id          String     @id @default(cuid())
+  updatedAt   DateTime   @updatedAt
+  xCoordinate Float?
+  yCoordinate Float?
+}
